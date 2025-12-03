@@ -1,0 +1,189 @@
+:root {
+    --color-primary: #6a1b9a;
+    --color-secondary: #00b894;
+    --color-accent: #ff7675;
+    --color-bg-card: #ffffff;
+    --shadow: 0 6px 0 rgba(0,0,0,0.15);
+}
+
+body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #6a1b9a 0%, #00b894 100%);
+}
+
+.app-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    width: 90%;
+    max-width: 420px;
+    min-height: 600px;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    color: var(--color-primary);
+    font-weight: 900;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+    text-transform: capitalize;
+    position: relative;
+    top: 0;
+}
+
+button:active {
+    top: 4px;
+    box-shadow: none !important;
+}
+
+.btn-difficulty {
+    background-color: #fdcb6e;
+    color: #2d3436;
+    box-shadow: 0 5px 0 #e1b12c;
+}
+.btn-difficulty:hover {
+    background-color: #ffeaa7;
+}
+
+.btn-option {
+    background-color: #f1f2f6;
+    color: #2d3436;
+    box-shadow: 0 5px 0 #ced6e0;
+}
+.btn-option:hover:not(:disabled) {
+    background-color: #dfe4ea;
+    transform: scale(1.02);
+}
+
+.btn-action {
+    background-color: var(--color-primary);
+    color: white;
+    box-shadow: 0 5px 0 #4a0e6e;
+    margin-top: 20px;
+}
+
+.correct {
+    background-color: #00b894 !important;
+    color: white !important;
+    box-shadow: 0 5px 0 #00896d !important;
+}
+
+.incorrect {
+    background-color: #ff7675 !important;
+    color: white !important;
+    box-shadow: 0 5px 0 #d63031 !important;
+}
+
+.disabled {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loader {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: auto;
+    font-weight: bold;
+}
+
+/* TARJETAS DE PREGUNTA */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.option-box {
+    background: #ffffff;
+    border: 2px solid #dfe6e9;
+    border-radius: 18px;
+    padding: 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+    color: #2d3436;
+    box-shadow: 0 4px 0 #b2bec3;
+}
+
+.option-box:hover:not(:disabled) {
+    transform: translateY(-3px);
+    background: #f7f7f7;
+}
+
+.option-box:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+/* Estados */
+.option-correct {
+    background: #00b894 !important;
+    color: white !important;
+    border-color: #00a186 !important;
+}
+
+.option-incorrect {
+    background: #ff7675 !important;
+    color: white !important;
+    border-color: #e05656 !important;
+}
+
+.option-disabled {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* DIFICULTAD */
+.difficulty-tag {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #636e72;
+    background: #dfe6e9;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.question-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 400px; /* <-- tamaño mínimo de la tarjeta */
+}
+
