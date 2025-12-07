@@ -1,137 +1,144 @@
-import React, { useState } from 'react';
-import { Difficulty } from './Difficulty.jsx';
-import { Questions } from './Questions.jsx';
-import { getQuestions, checkAnswer } from './api';
-import logo from './assets/logo.png';
+import React, { useState } from "react";
+import { Difficulty } from "./Difficulty.jsx";
+import { Questions } from "./Questions.jsx";
+import { getQuestions, checkAnswer } from "./api.js";
+import logo from "./assets/logo.png";
 
 function App() {
 
-    const [gameStatus, setGameStatus] = useState('MENU');
-    const [questions, setQuestions] = useState([]);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [score, setScore] = useState(0);
+    const [phase, setPhase] = useState("START");
+    const [questionList, setQuestionList] = useState([]);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [loadingAnswer, setLoadingAnswer] = useState(false);
+    const [picked, setPicked] = useState(null);
+    const [answerState, setAnswerState] = useState(null);
+    const [currentDifficulty, setCurrentDifficulty] = useState(null);
 
-    const [isThinking, setIsThinking] = useState(false);
-    const [selectedAnswer, setSelectedAnswer] = useState(null);
-    const [isCorrect, setIsCorrect] = useState(null);
-    const [difficulty, setDifficulty] = useState(null);
+    const startGame = async (difficultyChosen) => {
+        setCurrentDifficulty(difficultyChosen);
+        setPhase("FETCHING");
 
-    const handleStartGame = async (selectedDifficulty) => {
-        setDifficulty(selectedDifficulty); // <-- guardamos la dificultad
-        setGameStatus('LOADING');
         try {
-            const questionsData = await getQuestions(selectedDifficulty);
-            setQuestions(questionsData);
-            setCurrentQuestionIndex(0);
-            setScore(0);
-            setGameStatus('PLAYING');
-        } catch (error) {
-            console.error(error);
-            setGameStatus('MENU');
+            const data = await getQuestions(difficultyChosen);
+
+            setQuestionList(data);
+            setActiveIndex(0);
+            setCorrectCount(0);
+
+            setPhase("IN_GAME");
+        } catch (err) {
+            console.error("Error cargando preguntas:", err);
+            setPhase("START");
         }
     };
 
+    const handleAnswer = async (questionId, option) => {
+        if (loadingAnswer) return;
 
-    const handleAnswer = async (questionId, selectedOption) => {
-        if (isThinking) return;
-        setIsThinking(true);
-        setSelectedAnswer(selectedOption);
+        setPicked(option);
+        setLoadingAnswer(true);
 
         try {
-            const result = await checkAnswer(questionId, selectedOption);
-            setIsCorrect(result.answer);
+            const result = await checkAnswer(questionId, option);
+            const wasCorrect = result.answer;
+
+            setAnswerState(wasCorrect);
 
             setTimeout(() => {
-                if (result.answer === true) {
-                    setScore(prev => prev + 1);
+                if (wasCorrect) {
+                    setCorrectCount((prev) => prev + 1);
 
-                    const nextIndex = currentQuestionIndex + 1;
-                    if (nextIndex < questions.length) {
-                        setCurrentQuestionIndex(nextIndex);
-                        setSelectedAnswer(null);
-                        setIsCorrect(null);
-                        setIsThinking(false);
+                    const next = activeIndex + 1;
+
+                    if (next < questionList.length) {
+                        setActiveIndex(next);
+                        setPicked(null);
+                        setAnswerState(null);
+                        setLoadingAnswer(false);
                     } else {
-
-                        setGameStatus('WIN');
-                        setIsThinking(false);
+                        setPhase("COMPLETE");
+                        setLoadingAnswer(false);
                     }
-
                 } else {
-
-                    setGameStatus('GAME_OVER');
-                    setIsThinking(false);
+                    setPhase("FAIL");
+                    setLoadingAnswer(false);
                 }
-            }, 1500);
-
-        } catch (error) {
-            console.error("Error API:", error);
-            setIsThinking(false);
+            }, 1400);
+        } catch (err) {
+            console.error("Error evaluando respuesta:", err);
+            setLoadingAnswer(false);
         }
     };
 
-
-    const resetGame = () => {
-        setGameStatus('MENU');
-        setQuestions([]);
-        setScore(0);
-        setSelectedAnswer(null);
-        setIsCorrect(null);
+    const resetToMenu = () => {
+        setPhase("START");
+        setQuestionList([]);
+        setCorrectCount(0);
+        setPicked(null);
+        setAnswerState(null);
+        setActiveIndex(0);
     };
 
     return (
         <div className="app-container">
+
             <div className="header">
-                <img src={logo} alt="Logo Preguntados" className="logo" /> {/* <-- Usamos el logo */}
+                <img src={logo} alt="Logo" className="logo" />
                 <h1>Preguntados</h1>
-                {gameStatus === 'PLAYING' && (
-                    <div className="score-tag">Aciertos: {score}</div>
+
+                {phase === "IN_GAME" && (
+                    <span className="score-tag">Aciertos: {correctCount}</span>
                 )}
             </div>
 
-            {gameStatus === 'MENU' && (
-                <Difficulty onSelect={handleStartGame} />
+            {phase === "START" && (
+                <Difficulty onSelect={startGame} />
             )}
 
-            {gameStatus === 'LOADING' && <div className="loader">Buscando preguntas...</div>}
+            {phase === "FETCHING" && (
+                <div className="loader">Cargando preguntas...</div>
+            )}
 
-
-            {gameStatus === 'PLAYING' && questions.length > 0 && (
+            {phase === "IN_GAME" && questionList.length > 0 && (
                 <Questions
-                    question={questions[currentQuestionIndex]}
+                    question={questionList[activeIndex]}
                     onAnswer={handleAnswer}
-                    showResult={isCorrect !== null} // <-- mostramos colores solo cuando hay resultado
-                    selectedAnswer={selectedAnswer}
-                    isCorrect={isCorrect}
-                    difficulty={difficulty}
+                    showResult={answerState !== null}
+                    selectedAnswer={picked}
+                    isCorrect={answerState}
+                    difficulty={currentDifficulty}
                 />
             )}
 
-            {gameStatus === 'GAME_OVER' && (
+            {phase === "FAIL" && (
                 <div className="result-screen lose">
-                    <h2>❌ ¡Respuesta Incorrecta!</h2>
-                    <p>¡Ups! Esta no era… pero no te rindas 😎</p>
-                    <div className="final-score">Aciertos: {score}</div>
-                    <button onClick={resetGame} className="btn-action">
-                        Volver a Intentar
+                    <h2>❌ ¡Fallaste!</h2>
+                    <p>No pasa nada, probá de nuevo.</p>
+
+                    <div className="final-score">Total de aciertos: {correctCount}</div>
+
+                    <button className="btn-action" onClick={resetToMenu}>
+                        Volver al menú
                     </button>
                 </div>
             )}
 
-
-            {gameStatus === 'WIN' && (
+            {phase === "COMPLETE" && (
                 <div className="result-screen win">
-                    <h2>🏆 ¡Completaste el juego!</h2>
-                    <p>¡Eres un genio!</p>
-                    <div className="final-score">Puntaje Perfecto: {score}</div>
-                    <button onClick={resetGame} className="btn-action">
-                        Jugar Otra Vez
+                    <h2>🏆 ¡Juego completado!</h2>
+                    <p>¡Excelente trabajo!</p>
+
+                    <div className="final-score">Puntaje perfecto: {correctCount}</div>
+
+                    <button className="btn-action" onClick={resetToMenu}>
+                        Jugar otra vez
                     </button>
                 </div>
             )}
+
         </div>
     );
 }
 
 export default App;
-

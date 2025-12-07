@@ -3,27 +3,27 @@ import { getDifficulties } from './api.js';
 
 export const Difficulty = ({ onSelect }) => {
 
-    const [difficulties, setDifficulties] = useState([]);
-
+    const [levels, setLevels] = useState([]);
 
     useEffect(() => {
-        getDifficulties().then((data) => {
-            setDifficulties(data);
-        });
+        async function loadLevels() {
+            const data = await getDifficulties();
+            setLevels(data);
+        }
+        loadLevels();
     }, []);
 
     return (
-        <div>
-            <h2>Selecciona una dificultad:</h2>
+        <div className="difficulty-wrapper">
+            <h2>Elegí la dificultad:</h2>
 
-            {difficulties.map((diff) => (
+            {levels.map((level) => (
                 <button
-                    key={diff}
-                    onClick={() => onSelect(diff)}
-                    style={{ margin: '5px', padding: '10px' }}
+                    key={level}
+                    onClick={() => onSelect(level)}
                     className="btn-difficulty"
                 >
-                    {diff}
+                    {level}
                 </button>
             ))}
         </div>

@@ -1,27 +1,19 @@
-:root {
-    --color-primary: #6a1b9a;
-    --color-secondary: #00b894;
-    --color-accent: #ff7675;
-    --color-bg-card: #ffffff;
-    --shadow: 0 6px 0 rgba(0,0,0,0.15);
-}
-
 body {
     margin: 0;
     font-family: 'Nunito', sans-serif;
-    height: 100vh;
     width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     background: linear-gradient(135deg, #6a1b9a 0%, #00b894 100%);
 }
 
 .app-container {
     background-color: rgba(255, 255, 255, 0.95);
-    width: 90%;
-    max-width: 420px;
-    min-height: 600px;
+    width: min(422.56px, 90vw);
+    height: min(650px, 90vh);
     border-radius: 30px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     padding: 25px;
@@ -29,18 +21,18 @@ body {
     flex-direction: column;
     text-align: center;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .logo {
     width: 120px;
     height: auto;
     margin-bottom: 10px;
-    margin-bottom: 10px;
 }
 
 h1 {
-    color: var(--color-primary);
+    color: #6a1b9a;
     font-weight: 900;
     font-size: 2.2rem;
     margin-bottom: 20px;
@@ -65,7 +57,7 @@ button {
 
 button:active {
     top: 4px;
-    box-shadow: none !important;
+    box-shadow: none;
 }
 
 .btn-difficulty {
@@ -73,6 +65,7 @@ button:active {
     color: #2d3436;
     box-shadow: 0 5px 0 #e1b12c;
 }
+
 .btn-difficulty:hover {
     background-color: #ffeaa7;
 }
@@ -88,22 +81,22 @@ button:active {
 }
 
 .btn-action {
-    background-color: var(--color-primary);
+    background-color: #6a1b9a;
     color: white;
     box-shadow: 0 5px 0 #4a0e6e;
     margin-top: 20px;
 }
 
 .correct {
-    background-color: #00b894 !important;
-    color: white !important;
-    box-shadow: 0 5px 0 #00896d !important;
+    background-color: #00b894;
+    color: white;
+    box-shadow: 0 5px 0 #00896d;
 }
 
 .incorrect {
-    background-color: #ff7675 !important;
-    color: white !important;
-    box-shadow: 0 5px 0 #d63031 !important;
+    background-color: #ff7675;
+    color: white;
+    box-shadow: 0 5px 0 #d63031;
 }
 
 .disabled {
@@ -113,12 +106,11 @@ button:active {
 
 .loader {
     font-size: 1.5rem;
-    color: var(--color-primary);
+    color: #6a1b9a;
     margin: auto;
     font-weight: bold;
 }
 
-/* TARJETAS DE PREGUNTA */
 .options-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -149,17 +141,16 @@ button:active {
     box-shadow: none;
 }
 
-/* Estados */
 .option-correct {
-    background: #00b894 !important;
-    color: white !important;
-    border-color: #00a186 !important;
+    background: #00b894;
+    color: white;
+    border-color: #00a186;
 }
 
 .option-incorrect {
-    background: #ff7675 !important;
-    color: white !important;
-    border-color: #e05656 !important;
+    background: #ff7675;
+    color: white;
+    border-color: #e05656;
 }
 
 .option-disabled {
@@ -167,7 +158,6 @@ button:active {
     pointer-events: none;
 }
 
-/* DIFICULTAD */
 .difficulty-tag {
     text-transform: uppercase;
     font-weight: bold;
@@ -184,6 +174,32 @@ button:active {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    min-height: 400px; /* <-- tamaño mínimo de la tarjeta */
+    min-height: 400px;
 }
 
+.difficulty-tag-question {
+    align-self: center;
+    background: blue;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.question-text {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #2d3436;
+    margin: 0 0 20px 0;
+}
+
+.question-header {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 20px;
+}

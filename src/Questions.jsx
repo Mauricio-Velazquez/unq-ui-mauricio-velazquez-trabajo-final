@@ -9,22 +9,10 @@ export const Questions = ({ question, onAnswer, selectedAnswer, showResult, isCo
     return (
         <div className="question-card">
 
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginBottom: '20px' }}>
-                <span style={{
-                    alignSelf: 'center',
-                    background: 'blue',
-                    padding: '5px 15px',
-                    borderRadius: '20px',
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold',
-                    color: 'white',
-                    marginBottom: '10px',
-                    textTransform: 'uppercase'
-                }}>
-                    {difficulty || "Global"}
-                </span>
+            <div className="question-header">
+                <span className="difficulty-tag-question"> {difficulty || "Global"} </span>
 
-                <h2 style={{ textAlign: 'center', fontSize: '1.4rem', color: '#2d3436' }}>
+                <h2 className="question-text">
                     {question.question}
                 </h2>
             </div>
@@ -53,5 +41,3 @@ export const Questions = ({ question, onAnswer, selectedAnswer, showResult, isCo
         </div>
     );
 };
-
-
